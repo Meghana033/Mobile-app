@@ -1,111 +1,133 @@
-import { useState } from "react";
+import React, { useMemo, useState } from "react";
 import MovieCard from "./components/MovieCard";
 import "./App.css";
 
-function App() {
-  const movies = [
-    {
-      id: 1,
-      title: "Inception",
-      year: 2010,
-      rating: 8.8,
-      genre: "Sci-Fi",
-      description: "A mind bending thriller"
-    },
-    {
-      id: 2,
-      title: "Titanic",
-      year: 1997,
-      rating: 7.9,
-      genre: "Romance",
-      description: "Classic love story"
-    },
-    {
-      id: 3,
-      title: "Avengers",
-      year: 2012,
-      rating: 8.0,
-      genre: "Action",
-      description: "Marvel superhero movie"
-    },
-    {
-      id: 4,
-      title: "Interstellar",
-      year: 2014,
-      rating: 8.7,
-      genre: "Sci-Fi",
-      description: "Space exploration film"
-    },
-    {
-      id: 5,
-      title: "Frozen",
-      year: 2013,
-      rating: 7.5,
-      genre: "Animation",
-      description: "Disney animated movie"
-    },
-    {
-      id: 6,
-      title: "Joker",
-      year: 2019,
-      rating: 8.4,
-      genre: "Drama",
-      description: "Psychological drama"
-    }
-  ];
+const movieData = [
+  {
+    id: 101,
+    name: "Inception",
+    releaseYear: 2010,
+    score: 8.8,
+    category: "Sci-Fi",
+    info: "A mind bending thriller"
+  },
+  {
+    id: 102,
+    name: "Titanic",
+    releaseYear: 1997,
+    score: 7.9,
+    category: "Romance",
+    info: "Classic love story"
+  },
+  {
+    id: 103,
+    name: "Avengers",
+    releaseYear: 2012,
+    score: 8.0,
+    category: "Action",
+    info: "Marvel superhero movie"
+  },
+  {
+    id: 104,
+    name: "Interstellar",
+    releaseYear: 2014,
+    score: 8.7,
+    category: "Sci-Fi",
+    info: "Space exploration film"
+  },
+  {
+    id: 105,
+    name: "Frozen",
+    releaseYear: 2013,
+    score: 7.5,
+    category: "Animation",
+    info: "Disney animated movie"
+  },
+  {
+    id: 106,
+    name: "Joker",
+    releaseYear: 2019,
+    score: 8.4,
+    category: "Drama",
+    info: "Psychological drama"
+  }
+];
 
-  const [search, setSearch] = useState("");
-  const [genre, setGenre] = useState("All");
+const App = () => {
+  const [searchText, setSearchText] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const filteredMovies = movies.filter((movie) => {
-    const searchMatch = movie.title
-      .toLowerCase()
-      .includes(search.toLowerCase());
+  const movieResults = useMemo(() => {
+    return movieData.filter((item) => {
+      const titleCheck = item.name
+        .toLowerCase()
+        .startsWith(searchText.toLowerCase());
 
-    const genreMatch =
-      genre === "All" || movie.genre === genre;
+      const categoryCheck =
+        selectedCategory === "All" ||
+        item.category === selectedCategory;
 
-    return searchMatch && genreMatch;
-  });
+      return titleCheck && categoryCheck;
+    });
+  }, [searchText, selectedCategory]);
 
   return (
-    <div className="app">
-      <h1>Movie List Filter & Search</h1>
+    <main className="app">
+      <h1 className="app-title">Movie Explorer</h1>
 
-      <div className="controls">
+      <section className="controls">
         <input
-          type="text"
-          placeholder="Search movie..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          type="search"
+          placeholder="Type movie name..."
+          value={searchText}
+          onChange={(event) =>
+            setSearchText(event.target.value)
+          }
         />
 
         <select
-          value={genre}
-          onChange={(e) => setGenre(e.target.value)}
+          value={selectedCategory}
+          onChange={(event) =>
+            setSelectedCategory(event.target.value)
+          }
         >
-          <option value="All">All</option>
-          <option value="Sci-Fi">Sci-Fi</option>
-          <option value="Romance">Romance</option>
-          <option value="Action">Action</option>
-          <option value="Animation">Animation</option>
-          <option value="Drama">Drama</option>
+          {[
+            "All",
+            "Sci-Fi",
+            "Romance",
+            "Action",
+            "Animation",
+            "Drama"
+          ].map((type) => (
+            <option key={type} value={type}>
+              {type}
+            </option>
+          ))}
         </select>
-      </div>
+      </section>
 
-      <div className="movie-grid">
-        {filteredMovies.length > 0 ? (
-          filteredMovies.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} />
+      <section className="movie-grid">
+        {movieResults.length ? (
+          movieResults.map((movie) => (
+            <MovieCard
+              key={movie.id}
+              movie={{
+                title: movie.name,
+                year: movie.releaseYear,
+                rating: movie.score,
+                genre: movie.category,
+                description: movie.info
+              }}
+            />
           ))
         ) : (
-          <p className="no-movies">
-            No movies found
-          </p>
+          <h2 className="no-movies">
+            Sorry, no matching movies found
+          </h2>
         )}
-      </div>
-    </div>
+      </section>
+    </main>
   );
-}
+};
 
 export default App;
