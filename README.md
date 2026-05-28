@@ -1,2 +1,2 @@
-# movie-filter-app
+# movie app
 
