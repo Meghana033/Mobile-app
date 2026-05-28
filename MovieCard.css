@@ -1,0 +1,18 @@
+.movie-card {
+  background: #1f2937;
+  padding: 20px;
+  border-radius: 12px;
+  transition: 0.3s;
+}
+
+.movie-card:hover {
+  transform: translateY(-5px);
+}
+
+.movie-card h2 {
+  color: #38bdf8;
+}
+
+.movie-card p {
+  margin: 10px 0;
+}
